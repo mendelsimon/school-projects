@@ -1,0 +1,7 @@
+Second Program:  Summation of 5 decimal numbers.
+ 
+Enter a number 001 to 999. If input is 000 exit program
+Output the sum of the 5 entered digits
+Output a 000 if an overflow happens
+Sort the 5 numbers
+Output the 5 digits sorted High to Low

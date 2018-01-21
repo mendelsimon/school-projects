@@ -1,0 +1,8 @@
+Third Program: development a program to control a traffic light
+ 
+Situation is an intersection with North/South and East/West traffic
+1 input for north/south time (number of times in a loop)
+1 input for east/west time (number of times in a loop)
+Left turn time is approximately 1/3 the time of the north/south time 
+North/South has a left turn option: input 0 for no left turn, 5 for south left turn, 10 for north left turn and 15 for both left turn 
+Program starts in state RRGR.  See attached flowchart.

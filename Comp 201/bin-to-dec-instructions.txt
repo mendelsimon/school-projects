@@ -1,0 +1,10 @@
+First program:  Convert a base 10 number to Binary
+ 
+Enter a number 000 to 511. If greater that 511 exit program
+Output binary value using 3 output statements. First output is the Most Significant octet, Second is middle octet and Third is Less Significant Octet.
+Program should look something like:
+                    Input: 255
+ 
+                    Output: 011
+                    Output: 111
+                    Output: 111

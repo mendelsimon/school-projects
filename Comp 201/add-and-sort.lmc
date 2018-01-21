@@ -1,0 +1,91 @@
+			INP				// Get the first number.
+			BRZ	EXIT		// If the number is a 0, jump to the HLT instruction.
+			STO	NUM1		// Store the number in its storage location.
+			INP				// Get the second number.
+			BRZ	EXIT		// If the number is a 0, jump to the HLT instruction.
+			STO	NUM2		// Store the number in its storage location.
+			INP				// Get the third number.
+			BRZ	EXIT		// If the number is a 0, jump to the HLT instruction.
+			STO	NUM3		// Store the number in its storage location.
+			INP				// Get the fourth number.
+			BRZ	EXIT		// If the number is a 0, jump to the HLT instruction.
+			STO	NUM4		// Store the number in its storage location.
+			INP				// Get the fifth number.
+			BRZ	EXIT		// If the number is a 0, jump to the HLT instruction.
+			STO	NUM5		// Store the number in its storage location.
+			LDA	NUM1		// Add the numbers: Load the first number into the accumulator.
+			ADD	NUM2		// Add the second number.
+			BRP	ADDNUM3		// If it’s still a positive number (no overflow), then continue adding the numbers.
+			BRA	FAIL		// If it’s not positive, jump to output a 0 and exit.
+ADDNUM3		ADD	NUM3		// Add the third number.
+			BRP	ADDNUM4		// If it’s still a positive number (no overflow), then continue adding the numbers.
+			BRA	FAIL		// If it’s not positive, jump to output a 0 and exit.
+ADDNUM4		ADD	NUM4		// Add the fourth number.
+			BRP	ADDNUM5		// If it’s still a positive number (no overflow), then continue adding the numbers.
+			BRA	FAIL		// If it’s not positive, jump to output a 0 and exit.
+ADDNUM5		ADD	NUM5		// Add the fifth number.
+			BRP	OUTSUM		// If it’s still a positive number (no overflow), then output the sum.
+			BRA	FAIL		// If it’s not positive, jump to output a 0 and exit.
+OUTSUM		OUT				// Output the sum which is currently in the accumulator.
+BUBBLESORT	LDA	NUM1		// Load NUM1 into the accumulator.
+			SUB	NUM2		// Test if NUM2 > NUM1: Subtract NUM2 from NUM1.
+			BRP	TEST23		// If it’s positive, NUM1 > NUM2, so go on to test if NUM2 > NUM3.
+			LDA	NUM1		// If it’s not positive, they need to be swapped: Load NUM1 into the accumulator.
+			STO	TEMP		// Store it in TEMP.
+			LDA	NUM2		// Load NUM2.
+			STO	NUM1		// Store it in NUM1.
+			LDA	TEMP		// Load temp.
+			STO	NUM2		// Store it in NUM2.
+			BRA	BUBBLESORT	// Since a swap has been made, jump to the top of the bubblesort loop.
+TEST23		LDA	NUM2		// Load NUM2 into the accumulator.
+			SUB	NUM3		// Test if NUM3 > NUM2: Subtract NUM3 from NUM2.
+			BRP	TEST34		// If it’s positive, NUM2 > NUM3, so go on to test if NUM3 > NUM4.
+			LDA	NUM2		// If it’s not positive, they need to be swapped: Load NUM2 into the accumulator.
+			STO	TEMP		// Store it in TEMP.
+			LDA	NUM3		// Load NUM3.
+			STO	NUM2		// Store it in NUM2.
+			LDA	TEMP		// Load temp.
+			STO	NUM3		// Store it in NUM3.
+			BRA	BUBBLESORT	// Since a swap has been made, jump to the top of the bubblesort loop.
+TEST34		LDA	NUM3		// Load NUM3 into the accumulator.
+			SUB	NUM4		// Test if NUM4 > NUM3: Subtract NUM4 from NUM3.
+			BRP	TEST45		// If it’s positive, NUM3 > NUM4, so go on to test if NUM4 > NUM5.
+			LDA	NUM3		// If it’s not positive, they need to be swapped: Load NUM3 into the accumulator.
+			STO	TEMP		// Store it in TEMP.
+			LDA	NUM4		// Load NUM4.
+			STO	NUM3		// Store it in NUM3.
+			LDA	TEMP		// Load temp.
+			STO	NUM4		// Store it in NUM4.
+			BRA	BUBBLESORT	// Since a swap has been made, jump to the top of the bubblesort loop.
+TEST45		LDA	NUM4		// Load NUM4 into the accumulator.
+			SUB	NUM5		// Test if NUM5 > NUM4: Subtract NUM5 from NUM4.
+			BRP	FINISH		// If it’s positive, NUM4 > NUM5. If this point is reached, it means that no swaps were made, so the numbers are sorted. Jump to FINISH to output the numbers and exit.
+			LDA	NUM4		// If it’s not positive, they need to be swapped: Load NUM4 into the accumulator.
+			STO	TEMP		// Store it in TEMP.
+			LDA	NUM5		// Load NUM5.
+			STO	NUM4		// Store it in NUM4.
+			LDA	TEMP		// Load temp.
+			STO	NUM5		// Store it in NUM5.
+			BRA	BUBBLESORT	// Since a swap has been made, jump to the top of the bubblesort loop.
+FINISH		LDA	NUM1		// Output the sorted numbers: Load NUM1 into the accumulator.
+			OUT				// Output NUM1.
+			LDA	NUM2		// Load NUM2 into the accumulator.
+			OUT				// Output NUM2.
+			LDA	NUM3		// Load NUM3 into the accumulator.
+			OUT				// Output NUM3.
+			LDA	NUM4		// Load NUM4 into the accumulator.
+			OUT				// Output NUM4.
+			LDA	NUM5		// Load NUM5 into the accumulator.
+			OUT				// Output NUM5.
+			BRA	EXIT		// Skip to the exit.
+FAIL		LDA	ZERO		// For the failure state (overflow), output the number 0 and exit: Load 0 into the accumulator.
+			OUT				// Output the 0.
+EXIT		HLT				// Exit the program.
+ZERO		DAT	0			// Store the number 0.
+ONE			DAT	1			// Store the number 1.
+NUM1		DAT	0			// Storage location for the first number.
+NUM2		DAT	0			// Storage location for the second number.
+NUM3		DAT	0			// Storage location for the third number.
+NUM4		DAT	0			// Storage location for the fourth number.
+NUM5		DAT	0			// Storage location for the fifth number.
+TEMP		DAT	0			// Location to temporarily store a number when swapping.

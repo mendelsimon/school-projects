@@ -1,0 +1,70 @@
+	INP		Get the number.
+	STO	NUMBER	Store the number.
+	SUB	MAX	Check if the number is greater than 511: Subtract 512 from the number.
+	BRP	EXIT	If the number is positive, it means it was greater than 511, so jump to the HALT instruction.
+MAINLOOP	LDA	NUMBER	Begin the main loop: Load NUMBER into the accumulator.
+	BRZ	FINISH	If the number equals 0, jump to the FINISH section where the octets are printed.
+	LDA	ZERO	Clear TEMPNUM: Load 0 into the accumulator.
+	STO	TEMPNUM	Store that in TEMPNUM.
+DIVLOOP	LDA	TEMPNUM	Divide the number by two by subtracting one from the number and adding one to a temporary number until TEMPNUM – NUMBER equals 0 or 1: Load TEMPNUM.
+	SUB	NUMBER	Subtract NUMBER from TEMPNUM.
+	BRZ	FIXADDNUM	If TEMPNUM – NUMBER is 0, jump to FIXADDNUM, skipping past modifying the octets.
+	BRP	MODOCTET	If TEMPNUM – NUMBER is 1, jump to MODOCTET where the octet gets modified.
+	LDA	TEMPNUM	Load TEMPNUM into the accumulator.
+	ADD	ONE	Add one to TEMPNUM.
+	STO	TEMPNUM	Store TEMPNUM in its location.
+	LDA	NUMBER	Load NUMBER into the accumulator.
+	SUB	ONE	Subtract one from NUMBER.
+	STO	NUMBER	Store NUMBER in its location.
+	BRA	DIVLOOP	Jump back to the top of the division loop to continue the division.
+MODOCTET	LDA	OCTETNUM	Find the correct octet to modify: Load OCTETNUM into the accumulator.
+	SUB	TWO	Subtract 2 from OCTETNUM.
+	BRZ	MODOCTET2	If the result is 0, it means we need to modify octet 2, so jump to MODOCTET3.
+	BRP	MODOCTET3	If the result is not 0, but is positive, it means we need to modify octet 3, so jump to MODOCTET3.
+	LDA	OCTET1	If the result is not positive or 0, it means we need to modify octet 1: Load OCTET1 into the accumulator.
+	ADD	ADDNUM	Add ADDNUM to the octet.
+	STO	OCTET1	Store the octet in its location.
+	BRA	FIXADDNUM	Jump over modifying to other octets to where ADDNUM gets fixed.
+MODOCTET2	LDA	OCTET2	Load OCTET2 into the accumulator.
+	ADD	ADDNUM	Add ADDNUM to the octet.
+	STO	OCTET2	Store the octet in its location.
+	BRA	FIXADDNUM	Jump over modifying to other octets to where ADDNUM gets fixed.
+MODOCTET3	LDA	OCTET3	Load OCTET3 into the accumulator.
+	ADD	ADDNUM	Add ADDNUM to the octet.
+	STO	OCTET3	Store the octet in its location.
+FIXADDNUM	LDA	ADDNUM	If ADDNUM is 100, then set it to 1 and subtract 1 from OCTETNUM. Otherwise, if it’s 10, set it to 100; and if it’s 1, set it to 10: Load ADDNUM into the accumulator.
+	SUB	TEN	Subtract 10 from ADDNUM.
+	BRZ	ADDNUM10	If the result is zero, that means ADDNUM is 10. Jump to ADDNUM10.
+	BRP	ADDNUM100	If the result is not zero but positive, that means ADDNUM is 100. Jump to ADDNUM100.
+	LDA	TEN	If the result is negative, that means ADDNUM is 1 and needs to be set to 10: Load 10 into the accumulator.
+	STO	ADDNUM	Store it in ADDNUM.
+	BRA	MAINLOOP	Jump back to the top of the main loop.
+ADDNUM10	LDA	HUNDRED	Load 100 into the accumulator.
+	STO	ADDNUM	Store it in ADDNUM.
+	BRA	MAINLOOP	Jump back to the top of the main loop.
+ADDNUM100	LDA	ONE	Load 1 into the accumulator.
+	STO	ADDNUM	Store it in ADDNUM.
+	LDA	OCTETNUM	Subtract one from OCTETNUM: Load OCTETNUM into the accumulator.
+	SUB	ONE	Subtract 1.
+	STO	OCTETNUM	Store the result in OCTETNUM.
+	BRA	MAINLOOP	Jump back to the top of the main loop.
+FINISH	LDA	OCTET1	Load the most significant octet into the accumulator.
+	OUT		Output its value.
+	LDA	OCTET2	Load the middle octet into the accumulator.
+	OUT		Output its value.
+	LDA	OCTET3	Load the least significant octet into the accumulator.
+	OUT		Output its value.
+EXIT	HLT		Exit the program.
+ZERO	DAT	0	Store the number 0.
+ONE	DAT	1	Store the number 1.
+TWO	DAT	2	Store the number 2.
+TEN	DAT	10	Store the number 10.
+HUNDRED	DAT	100	Store the number 100.
+MAX	DAT	512	Store the number 512 for input validation.
+OCTETNUM	DAT	3	The octet currently being modified.
+ADDNUM	DAT	1	The number being added to the octet (1, 10, or 100).
+OCTET1	DAT	0	Storage location for the most significant octet.
+OCTET2	DAT	0	Storage location for the middle octet.
+OCTET3	DAT	0	Storage location for the least significant octet.
+NUMBER	DAT	0	Storage location for the input number.
+TEMPNUM	DAT	0	Storage location for the temporary number used for division.

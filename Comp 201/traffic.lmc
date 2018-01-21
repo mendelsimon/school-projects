@@ -1,0 +1,77 @@
+			INP				// Get the East/West time.
+			STO	EWTIME		// Store it in its location.
+			INP				// Get the North/South time.
+			STO	NSTIME		// Store it in its location.
+DIVLOOP		LDA	NSTHIRD		// Divide the North/South time by 3 and store it in NSTHIRD: Load NSTHIRD into the accumulator.
+			ADD	ONE			// Add 1 to NSTHIRD.
+			STO	NSTHIRD		// Store it in its location.
+			LDA	DIVTEMP		// Load DIVTEMP into the accumulator.
+			ADD	THREE		// Add 3 to DIVTEMP.
+			STO	DIVTEMP		// Store it in its location.
+			SUB	NSTIME		// Check if DIVTEMP >= NSTIME. If it is, then NSTHIRD contains the quotient: Subtract NSTIME from DIVTEMP.
+			BRP	MAINLOOP	// If it’s positive, then NSTHIRD contains the quotient and we are done with the division: Jump to the main loop.
+			BRA	DIVLOOP		// Continue with the division: Jump to the top of the division loop.
+MAINLOOP	LDA	RRGR		// Load RRGR into the accumulator.
+			OUT				// Output RRGR.
+			LDA	EWTIME		// Delay for the East/West green time: Load EWTIME into the accumulator.
+EWGDELAY	SUB	ONE			// Subtract 1.
+			BRP	EWGDELAY	// If the number is positive, keep delaying: Jump to the top of this delay loop.
+			LDA	RRGR		// Display RRYR by subtracting 4 from RRGR: Load RRGR into the accumulator.
+			SUB	FOUR		// Subtract 4 to get RRYR.
+			OUT				// Output RRYR.
+			LDA	THREE		// Delay for 3, for the yellow light: Load 3 into the accumulator.
+EWYDELAY	SUB	ONE			// Subtract 1.
+			BRP	EWYDELAY	// If the number is positive, keep delaying: Jump to the top of this delay loop.
+			INP				// Get the left-turn input.
+			BRZ	NSGREEN		// If there are no left turns, jump to GGRR.
+			SUB	TEN			// Find out whether the input was 5, 10, or 15 by subtracting 10 and checking whether the result is 0, positive, or neither: Subtract 10 from the input.
+			BRZ	NLEFT		// If the result is 0, then the input was 10, so jump to NLEFT.
+			BRP	BLEFT		// If the result is not 0, but is positive, then the input was 15, so jump to BLEFT.
+			LDA	RBRG		// If the result is not 0 or positive, then the input was 5, so display RBRG: Load RBRG into the accumulator.
+			OUT				// Output RBRG.
+			SUB	ONE			// Subtract 1 to get the current left-turn yellow code.
+			STO	LEFTYCODE	// Store the left-turn yellow code in its location.
+			BRA	LEFTGREEN	// Jump to left-turn green light delay.
+NLEFT		LDA	BRRG		// Load BRRG into the accumulator.
+			OUT				// Output BRRG.
+			SUB	ONE			// Subtract 1 to get the current left-turn yellow code.
+			STO	LEFTYCODE	// Store the left-turn yellow code in its location.
+			BRA	LEFTGREEN	// Jump to left-turn green light delay.
+BLEFT		LDA	RRRG		// Load RRRG into the accumulator.
+			OUT				// Output RRRG.
+			SUB	ONE			// Subtract 1 to get the current left-turn yellow code.
+			STO	LEFTYCODE	// Store the left-turn yellow code in its location.
+LEFTGREEN	LDA	NSTHIRD		// Delay for NSTHIRD, for the left-turn green light: Load NSTHIRD into the accumulator.
+LEFTGDELAY	SUB	ONE			// Subtract 1.
+			BRP	LEFTGDELAY	// If the number is positive, keep delaying: Jump to the top of this delay loop.
+			LDA	LEFTYCODE	// Get the left-turn yellow code by subtracting 1.
+			OUT				// Output the left-turn yellow code.
+			LDA	THREE		// Delay for 3, for the left-turn yellow light: Load 3 into the accumulator.
+LEFTYDELAY	SUB	ONE			// Subtract 1.
+			BRP	LEFTYDELAY	// If the number is positive, keep delaying: Jump to the top of this delay loop.
+NSGREEN		LDA	GGRR		// Load GGRR into the accumulator.
+			OUT				// Output GGRR.
+			LDA	NSTIME		// Delay for the North/South green time: Load NSTIME into the accumulator.
+NSGDELAY	SUB	ONE			// Subtract 1.
+			BRP	NSGDELAY	// If the number is positive, keep delaying: Jump to the top of this delay loop.
+			LDA	YYRR		// Load YYRR into the accumulator.
+			OUT				// Output YYRR.
+			LDA	THREE		// Delay for 3, for the North/South yellow light: Load 3 into the accumulator.
+NSYDELAY	SUB	ONE			// Subtract 1.
+			BRP	NSYDELAY	// If the number is positive, keep delaying: Jump to the top of this delay loop.
+			BRA	MAINLOOP	// Continue with RRGR by jumping to the top of the main loop.
+ONE			DAT	1			// Store the number 1.
+THREE		DAT	3			// Store the number 3.
+FOUR		DAT	4			// Store the number 4.
+TEN			DAT	10			// Store the number 10.
+EWTIME		DAT	0			// Storage location for the East/West time.
+NSTIME		DAT	0			// Storage location for the North/South time.
+NSTHIRD		DAT	0			// Storage location for 1/3 of the North/South time.
+DIVTEMP		DAT	0			// Temporary number for doing division.
+RRGR		DAT	251			// Store the number for RRGR.
+RRRG		DAT	254			// Store the number for RRRG.
+BRRG		DAT	62			// Store the number for BRRG.
+RBRG		DAT	206			// Store the number for RBRG.
+GGRR		DAT 175			// Store the number for GGRR.
+YYRR		DAT	95			// Store the number for YYRR.
+LEFTYCODE	DAT	0			// Storage location for the current left-turn yellow code.
